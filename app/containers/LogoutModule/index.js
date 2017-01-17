@@ -20,7 +20,7 @@ export class LogoutModule extends React.Component { // eslint-disable-line react
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
     document.cookie = "user_id=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
     this.props.logOut();
-    this.props.push('/');
+    this.props.push('/susunjadwal/');
   }
   
   render() {

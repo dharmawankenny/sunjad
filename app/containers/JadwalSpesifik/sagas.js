@@ -5,24 +5,16 @@ import { FETCH } from './constants';
 import { isEmpty, isEqual } from 'lodash';
 import { fetchDone } from './actions';
 import request from 'utils/request';
-import { loading, loadingDone } from 'containers/App/actions';
+import { loading, loadingDone, loadingErr } from 'containers/App/actions';
 
 export function* fetchScheduleData(action) {
   yield put(loading());
-	let requestURL = `https://private-anon-7cc79298a3-sunjad.apiary-mock.com/sunjad/api/jadwals/${action.slug}`;
+	let requestURL = `http://ristek.cs.ui.ac.id/susunjadwal/api/jadwals/${action.slug}`;
 
   let jobId = action.slug.split(',');
-  const lastItemOfJobId = jobId.pop();
-
-  if(lastItemOfJobId !== '') {
-    jobId.push(lastItemOfJobId);
-  }
-
-  console.log(jobId);
 
   if(jobId.length > 1) {
-    console.log('jobsBanyak');
-    requestURL = 'https://private-anon-7cc79298a3-sunjad.apiary-mock.com/sunjad/api/jadwals/join';
+    requestURL = `http://ristek.cs.ui.ac.id/susunjadwal/api/jadwals/join?jadwals=${action.slug}`;
     
     const fetchScheduleDataCall = yield call(request, requestURL, {
       method: 'GET',
@@ -30,20 +22,19 @@ export function* fetchScheduleData(action) {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: {
-        jadwal_ids: jobId,
-      }
     });
 
     if(!fetchScheduleDataCall.err || !(fetchScheduleDataCall.err === 'SyntaxError: Unexpected end of JSON input')) {
-      yield put(fetchDone(fetchScheduleDataCall.data.jadwals));
-      yield put(loadingDone());
+      if(fetchScheduleDataCall.data) {
+        yield put(fetchDone(fetchScheduleDataCall.data.jadwals));
+        yield put(loadingDone());
+      } else {
+        yield put(loadingErr());
+      }
     } else {
-      console.log(fetchScheduleDataCall.err);
-      yield put(loadingDone());
+      yield put(loadingErr());
     }
   } else {
-    console.log('jobDikit');
   	const fetchScheduleDataCall = yield call(request, requestURL, {
       method: 'GET',
       headers: {
@@ -53,11 +44,14 @@ export function* fetchScheduleData(action) {
     });
 
     if(!fetchScheduleDataCall.err || !(fetchScheduleDataCall.err === 'SyntaxError: Unexpected end of JSON input')) {
-      yield put(fetchDone(fetchScheduleDataCall.data.jadwals));
-      yield put(loadingDone());
+      if(fetchScheduleDataCall.data) {
+        yield put(fetchDone(fetchScheduleDataCall.data.jadwals));
+        yield put(loadingDone());
+      } else {
+        yield put(loadingErr());
+      }
     } else {
-      console.log(fetchScheduleDataCall.err);
-      yield put(loadingDone());
+      yield put(loadingErr());
     }
   }
 }
@@ -75,6 +69,9 @@ export function* fetchScheduleSaga() {
 export function* jadwalSpesifikSaga() {
   // Fork watcher so we can continue execution
   const fetchScheduleWatcher = yield fork(fetchScheduleSaga);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(fetchScheduleWatcher);
 }
 
 // Bootstrap sagas

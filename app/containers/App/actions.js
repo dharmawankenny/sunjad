@@ -10,6 +10,7 @@ import {
   LOG_OUT,
   LOADING,
   LOADING_DONE,
+  LOADING_ERR,
 } from './constants';
 
 export function defaultAction() {
@@ -42,5 +43,11 @@ export function loading() {
 export function loadingDone() {
   return {
     type: LOADING_DONE,
+  };
+}
+
+export function loadingErr() {
+  return {
+    type: LOADING_ERR,
   };
 }

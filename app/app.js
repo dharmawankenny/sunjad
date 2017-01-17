@@ -32,16 +32,6 @@ import { translationMessages } from './i18n';
 import 'sanitize.css/sanitize.css';
 import './app.css';
 
-
-const FontObserver = new FontFaceObserver('Proxima Nova', {});
-
-// When Ubuntu is loaded, add a font-family using Ubuntu to the body
-FontObserver.load(null, 10000).then(() => {
-  console.log("pleb");
-}, () => {
-  console.log("plob");
-});
-
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
 // Optionally, this could be changed to leverage a created history
@@ -65,7 +55,6 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
-
 const render = (translatedMessages) => {
   ReactDOM.render(
     <Provider store={store}>
@@ -78,7 +67,6 @@ const render = (translatedMessages) => {
             // behaviour
             applyRouterMiddleware(useScroll())
           }
-          onUpdate={loading}
         />
       </LanguageProvider>
     </Provider>,

@@ -33,7 +33,7 @@ export class HomePage extends React.Component { // eslint-disable-line react/pre
       document.cookie = "token=" + data.token + "; expires=" + expires + ";path=/";
       document.cookie = "user_id=" + data.user_id + "; expires=" + expires + ";path=/";
       this.props.setLoginData(data.major_id, data.token, data.user_id);
-      this.props.push('/susun');
+      this.props.push('/susunjadwal/susun');
     };
 
     var major_id = this.getCookie("major_id");
@@ -41,7 +41,7 @@ export class HomePage extends React.Component { // eslint-disable-line react/pre
     var user_id = this.getCookie("user_id");
     if (major_id !== '' && token !== '' && user_id !== '') {
       this.props.setLoginData(major_id, token, user_id);
-      this.props.push('/susun');
+      this.props.push('/susunjadwal/susun');
     }
   }
 
@@ -61,7 +61,7 @@ export class HomePage extends React.Component { // eslint-disable-line react/pre
   }
 
   ssoLogin() {
-    window.open('http://localhost:9000/api', 'Sunjad_SSO_Login', 'width=600,height=600');
+    window.open('http://ristek.cs.ui.ac.id/susunjadwal/sso', 'Sunjad_SSO_Login', 'width=600,height=600');
   }
 
   render() {
@@ -77,7 +77,7 @@ export class HomePage extends React.Component { // eslint-disable-line react/pre
                 <FormattedMessage {...messages.subtitle} />
               </p>
               <button className={styles.loginButton} onClick={this.ssoLogin} >Login dengan SSO</button>
-              <p className={styles.gabungJadwalInfo}>Ingin cari waktu kosong? Gunakan fitur <button className={styles.link} onClick={() => this.props.push('/gabung')} >Gabungkan Jadwal</button></p>
+              <p className={styles.gabungJadwalInfo}>Ingin cari waktu kosong? Gunakan fitur <button className={styles.link} onClick={() => this.props.push('/susunjadwal/gabung')} >Gabungkan Jadwal</button></p>
               <div className={styles.noticeBar}>
                 <FormattedMessage {...messages.noticeMessage} />
               </div>

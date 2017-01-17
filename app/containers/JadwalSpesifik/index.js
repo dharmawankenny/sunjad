@@ -59,8 +59,8 @@ export class JadwalSpesifik extends React.Component { // eslint-disable-line rea
     var user_id = this.getCookie("user_id");
     if (major_id !== '' && token !== '' && user_id !== '') {
       navbarButton = [
-        (<button key="logoutButtonJS" onClick={() => this.props.push('/logout')}>Logout</button>),
-        (<button key="toJadwalButtonJS" onClick={() => this.props.push('/jadwal')}>Kembali ke daftar jadwal</button>),
+        (<button key="logoutButtonJS" onClick={() => this.props.push('/susunjadwal/logout')}>Logout</button>),
+        (<button key="toJadwalButtonJS" onClick={() => this.props.push('/susunjadwal/jadwal')}>Kembali ke daftar jadwal</button>),
       ];
     }
 

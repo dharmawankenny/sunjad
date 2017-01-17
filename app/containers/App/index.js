@@ -18,6 +18,7 @@ import selectGlobal from './selectors';
 import styles from './styles.css';
 
 import Footer from 'containers/Footer';
+import GrumpyImg from './grumpy.jpg';
 
 export class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -38,6 +39,14 @@ export class App extends React.Component { // eslint-disable-line react/prefer-s
                 <div className="sk-cube3 sk-cube"></div>
               </div>
               <h1>Loading, building up your request...</h1>
+            </div>
+          </div>
+        </div>
+        <div className="loadingScreen" style={{ display: this.props.error ? 'block' : 'none' }}>
+          <div className="container">
+            <div className="centralizer text-center">
+              <img src={GrumpyImg} alt="grumpycat" className={styles.failImg} />
+              <h1>Aww snap, something is wrong...</h1>
             </div>
           </div>
         </div>

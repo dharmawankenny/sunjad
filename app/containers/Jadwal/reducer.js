@@ -57,7 +57,7 @@ function jadwalReducer(state = initialState, action) {
    	case FETCH_PRIMARY_SCHEDULE:
    		return state.set('primarySched', action.mainSched);
     case SET_JADWAL_UTAMA:
-    	const currentState = state.get('scheduleList').toJS();
+    	const currentState = state.get('scheduleList');
     	const newState = [];
     	currentState.map((value, key) => {
     		value.utama = false;
@@ -66,8 +66,7 @@ function jadwalReducer(state = initialState, action) {
     		}
     		newState.push(value);
     	});
-    	console.log(newState);
-    	return state.set('scheduleList', fromJS(newState));
+    	return state.set('scheduleList', newState);
     default:
       return state;
   }

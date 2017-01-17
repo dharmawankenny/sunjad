@@ -12,6 +12,8 @@ export function* submitCall(action) {
 
 	localState.inputs.map((value, key) => {
 		let id = value.value;
+
+		//detect if its only id or full link
 		if(value.value.startsWith('http://ristek.cs.ui.ac.id/susunjadwal/jadwal/')) {
 			id = value.value.replace('http://ristek.cs.ui.ac.id/susunjadwal/jadwal/', '');
 		}
@@ -19,12 +21,18 @@ export function* submitCall(action) {
 			id = value.value.replace('ristek.cs.ui.ac.id/susunjadwal/jadwal/', '');
 		}
 
-		jadwals += `${id},`;
+		//if empty do not add
+		if(!(id === '' || id === null)) {
+			jadwals += `${id},`;
+		}
 	});
 
-	jadwals = jadwals.substring(0, jadwals.length-1);
+	//delete last ,
+	if(jadwals.endsWith(',')) {
+		jadwals = jadwals.substring(0, jadwals.length-1);
+	}
 
-	yield put(push(`/jadwal/${jadwals}`));
+	yield put(push(`/susunjadwal/jadwal/${jadwals}`));
 }
 
 /**
@@ -40,6 +48,9 @@ export function* submitSaga() {
 export function* gabungJadwalSaga() {
   // Fork watcher so we can continue execution
   const submitWatcher = yield fork(submitSaga);
+  
+  yield take(LOCATION_CHANGE);
+  yield cancel(submitWatcher);
 }
 
 // Bootstrap sagas

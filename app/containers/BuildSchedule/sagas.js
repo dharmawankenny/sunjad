@@ -8,7 +8,7 @@ import selectBuildSchedule from './selectors';
 import selectGlobal from 'containers/App/selectors';
 import { conflict, fetchJadwalSuccess } from './actions';
 import request from 'utils/request';
-import { loading, loadingDone } from 'containers/App/actions';
+import { loading, loadingDone, loadingErr } from 'containers/App/actions';
 
 /**
  * Github repos request/response handler
@@ -35,7 +35,6 @@ function checkConflict(data) {
 		var matkul = data[i];
 		var startTime = convertToMinute(data[i].start, data[i].day.toLowerCase());
 		var endTime = convertToMinute(data[i].end, data[i].day.toLowerCase());
-		console.log(startTime);
 		for(var j = startTime; j <= endTime; j++) {
 			if(flag[j] >= 0) {
 				conflictIdx.add(data[i]);
@@ -83,14 +82,13 @@ export function* saveJadwal() {
   yield put(loading());
   const globalState = yield select(selectGlobal());
   const localState = yield select(selectBuildSchedule());
-  const requestURL = `https://private-anon-7cc79298a3-sunjad.apiary-mock.com/sunjad/api/users/${globalState.user_id}/jadwals`;
+  const requestURL = `http://ristek.cs.ui.ac.id/susunjadwal/api/users/${globalState.user_id}/jadwals`;
   const auth = `Bearer ${globalState.token}`;
 
   let stagedJadwals = [];
 
   if(!isEmpty(localState.picked)) {
     for(let [key, value] of Object.entries(localState.picked)) {
-      console.log(value);
       value.schedule.map((item, index) => {
         stagedJadwals.push({ name: value.name, day: item.day, start: item.start, end: item.end, room: item.room });
       });
@@ -102,19 +100,22 @@ export function* saveJadwal() {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: auth,
+      'Authorization': auth,
     },
-    body: {
+    body: JSON.stringify({
       jadwals: stagedJadwals,
-    },
+    }),
   });
 
   if(!saveJadwalPostCall.err || !(saveJadwalPostCall.err === 'SyntaxError: Unexpected end of JSON input')) {
-    yield put(push(`/jadwal/${saveJadwalPostCall.data.jadwal_id}`));
-    yield put(loadingDone());
+    if(saveJadwalPostCall.data) {
+      yield put(push(`/susunjadwal/jadwal/${saveJadwalPostCall.data.jadwal_id}`));
+      yield put(loadingDone());
+    } else {
+      yield put(loadingErr());
+    }
   } else {
-    console.log(saveJadwalPostCall.err);
-    yield put(loadingDone());
+    yield put(loadingErr());
   }
 }
 
@@ -132,26 +133,27 @@ export function* fetchJadwal() {
   yield put(loading());
   const globalState = yield select(selectGlobal());
   const localState = yield select(selectBuildSchedule());
-  const requestURL = `https://private-anon-7cc79298a3-sunjad.apiary-mock.com/sunjad/api/majors/${globalState.major_id}/courses`;
+  const requestURL = `http://ristek.cs.ui.ac.id/susunjadwal/api/majors/${globalState.major_id}/courses`;
   const auth = `Bearer ${globalState.token}`;
-  console.log(auth);
-  console.log(requestURL);
 
   const fetchJadwalPostCall = yield call(request, requestURL, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: auth,
+      'Authorization': auth,
     },
   });
 
   if(!fetchJadwalPostCall.err || !(fetchJadwalPostCall.err === 'SyntaxError: Unexpected end of JSON input')) {
-    yield put(fetchJadwalSuccess(fetchJadwalPostCall.data.courses));
-    yield put(loadingDone());
+    if(fetchJadwalPostCall.data) {
+      yield put(fetchJadwalSuccess(fetchJadwalPostCall.data.courses));
+      yield put(loadingDone());
+    } else {
+      yield put(loadingErr());
+    }
   } else {
-    console.log(fetchJadwalPostCall.err);
-    yield put(loadingDone());
+    yield put(loadingErr());
   }
 }
 
@@ -171,6 +173,12 @@ export function* buildScheduleSaga() {
   const asyncCheckConflictOnRemoveWatcher = yield fork(asyncCheckConflictOnRemoveSaga);
   const saveJadwalWatcher = yield fork(saveJadwalSaga);
   const fetchJadwalWatcher = yield fork(fetchJadwalSaga);
+  
+  yield take(LOCATION_CHANGE);
+  yield cancel(asyncCheckConflictWatcher);
+  yield cancel(asyncCheckConflictOnRemoveWatcher);
+  yield cancel(saveJadwalWatcher);
+  yield cancel(fetchJadwalWatcher);
 }
 
 // Bootstrap sagas

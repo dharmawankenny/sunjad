@@ -71,12 +71,11 @@ export class BuildSchedule extends React.Component { // eslint-disable-line reac
 
   componentDidMount() {
     const globalStateObject = this.props.globalState;
-    console.log(globalStateObject);
     var major_id = this.getCookie("major_id");
     var token = this.getCookie("token");
     var user_id = this.getCookie("user_id");
     if (!(major_id !== '') || !(token !== '') || !(user_id !== '')) {
-      this.props.push('/');
+      this.props.push('/susunjadwal/');
     } else {
       if(globalStateObject.major_id === '' && globalStateObject.token === '' && globalStateObject.user_id === '') {
         this.props.setLoginData(major_id, token, user_id);
@@ -299,8 +298,8 @@ export class BuildSchedule extends React.Component { // eslint-disable-line reac
           </div>
         </div>
         <Header isFixed={true}>
-          <button onClick={() => this.props.push('/logout')}>Logout</button>
-          <button onClick={() => this.props.push('/jadwal')}>Lihat Jadwal Saya</button>
+          <button onClick={() => this.props.push('/susunjadwal/logout')}>Logout</button>
+          <button onClick={() => this.props.push('/susunjadwal/jadwal')}>Lihat Jadwal Saya</button>
         </Header>
         <div className="row expanded">
           <div className="small-12 medium-9 columns">

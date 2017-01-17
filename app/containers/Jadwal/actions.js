@@ -18,9 +18,12 @@ export function defaultAction() {
   };
 }
 
-export function fetch() {
+export function fetch(majorId, token, userId) {
   return {
     type: FETCH,
+    majorId,
+    token,
+    userId,
   };
 }
 

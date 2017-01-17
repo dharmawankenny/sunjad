@@ -18,7 +18,7 @@ export default function createRoutes(store) {
 
   return [
     {
-      path: '/',
+      path: '/susunjadwal/',
       name: 'home',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -34,7 +34,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: 'susun',
+      path: '/susunjadwal/susun',
       name: 'buildSchedule',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -54,7 +54,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: 'jadwal',
+      path: '/susunjadwal/jadwal',
       name: 'jadwal',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -74,7 +74,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: 'jadwal/:slug',
+      path: '/susunjadwal/jadwal/:slug',
       name: 'jadwalSpesifik',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -94,7 +94,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/gabung',
+      path: '/susunjadwal/gabung',
       name: 'gabungJadwal',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -114,7 +114,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/logout',
+      path: '/susunjadwal/logout',
       name: 'logoutModule',
       getComponent(location, cb) {
         System.import('containers/LogoutModule')
@@ -122,7 +122,7 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
-      path: '*',
+      path: '/susunjadwal/*',
       name: 'notfound',
       getComponent(nextState, cb) {
         System.import('containers/NotFoundPage')

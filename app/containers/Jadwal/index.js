@@ -31,22 +31,19 @@ export class Jadwal extends React.Component { // eslint-disable-line react/prefe
   };
 
   componentDidMount() {
-    if(this.props.localState.firstTimeLoad) {
-      this.props.fetch();
-    }
-
     const globalStateObject = this.props.globalState;
-    console.log(globalStateObject);
     var major_id = this.getCookie("major_id");
     var token = this.getCookie("token");
     var user_id = this.getCookie("user_id");
     if (!(major_id !== '') || !(token !== '') || !(user_id !== '')) {
-      this.props.push('/');
+      this.props.push('/susunjadwal/');
     } else {
       if(globalStateObject.major_id === '' && globalStateObject.token === '' && globalStateObject.user_id === '') {
         this.props.setLoginData(major_id, token, user_id);
       }
     }
+
+    this.props.fetch(major_id, token, user_id);
   }
 
   getCookie(cname) {
@@ -105,7 +102,7 @@ export class Jadwal extends React.Component { // eslint-disable-line react/prefe
                 <div className="row expanded">
                   <div className="small-6 columns">
                     <div className={styles.listItemContent}>
-                      <button onClick={() => this.props.push(`/jadwal/${value.id}`)}>{`http://ristek.cs.ui.ac.id/susunjadwal/jadwal/${value.id}`}</button>
+                      <button onClick={() => this.props.push(`/susunjadwal/jadwal/${value.id}`)}>{`http://ristek.cs.ui.ac.id/susunjadwal/jadwal/${value.id}`}</button>
                     </div>
                   </div>
                   <div className="small-4 columns">
@@ -115,7 +112,7 @@ export class Jadwal extends React.Component { // eslint-disable-line react/prefe
                   </div>
                   <div className="small-2 columns">
                     <div className={styles.listItemContent}>
-                      { value.utama ? (<p>Jadwal Utama</p>) : (<button onClick={() => console.log('cie')}>Set jadwal utama</button>) }
+                      <p>Jadwal Utama</p>
                     </div>
                   </div>
                 </div>
@@ -137,7 +134,7 @@ export class Jadwal extends React.Component { // eslint-disable-line react/prefe
                   <div className="row expanded">
                     <div className="small-6 columns">
                       <div className={styles.listItemContent}>
-                        <button onClick={() => this.props.push(`/jadwal/${value.id}`)}>{`http://ristek.cs.ui.ac.id/susunjadwal/jadwal/${value.id}`}</button>
+                        <button onClick={() => this.props.push(`/susunjadwal/jadwal/${value.id}`)}>{`http://ristek.cs.ui.ac.id/susunjadwal/jadwal/${value.id}`}</button>
                       </div>
                     </div>
                     <div className="small-4 columns">
@@ -147,7 +144,7 @@ export class Jadwal extends React.Component { // eslint-disable-line react/prefe
                     </div>
                     <div className="small-2 columns">
                       <div className={styles.listItemContent}>
-                        { value.utama ? (<p>Jadwal Utama</p>) : (<button onClick={() => this.props.setJadwalUtama(value.id)}>Set jadwal utama</button>) }
+                        <button onClick={() => this.props.setJadwalUtama(value.id)}>Set jadwal utama</button>
                       </div>
                     </div>
                   </div>
@@ -169,8 +166,8 @@ export class Jadwal extends React.Component { // eslint-disable-line react/prefe
           ]}
         />
         <Header>
-          <button onClick={() => this.props.push('/logout')}>Logout</button>
-          <button onClick={() => this.props.push('/susun')}>Buat Jadwal Baru</button>
+          <button onClick={() => this.props.push('/susunjadwal/logout')}>Logout</button>
+          <button onClick={() => this.props.push('/susunjadwal/susun')}>Buat Jadwal Baru</button>
         </Header>
         <div className={styles.jadwal}>
           <div className={styles.scheduleModule}>

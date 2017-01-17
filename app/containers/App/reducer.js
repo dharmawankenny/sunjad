@@ -11,6 +11,7 @@ import {
   LOG_OUT,
   LOADING,
   LOADING_DONE,
+  LOADING_ERR,
 } from './constants';
 
 const initialState = fromJS({
@@ -18,6 +19,7 @@ const initialState = fromJS({
   token: '',
   user_id: '',
   loading: false,
+  error: false,
 });
 
 function globalReducer(state = initialState, action) {
@@ -29,9 +31,11 @@ function globalReducer(state = initialState, action) {
     case LOG_OUT:
       return state.set('major_id', '').set('token', '').set('user_id', '');
     case LOADING:
-      return state.set('loading', true);
+      return state.set('loading', true).set('error', false);
     case LOADING_DONE:
-      return state.set('loading', false);
+      return state.set('loading', false).set('error', false);
+    case LOADING_ERR:
+      return state.set('loading', false).set('error', true);
     default:
       return state;
   }
